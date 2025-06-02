@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: menuscanorder
+    env: php
+    plan: free
+    repo: https://github.com/faransyari/menuscanorder
+    buildCommand: ""
+    startCommand: ""
+    phpVersion: 8.1
+    rootDir: public
