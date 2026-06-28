@@ -38,7 +38,7 @@ services:
       - key: DB_PASSWORD
         sync: false
       - key: DB_PORT
-        value: "3306"
+        sync: false
       # Managed MySQL (Aiven, etc.) requires TLS.
       - key: DB_SSL
         value: "true"
