@@ -17,6 +17,11 @@ services:
         value: "true"
       - key: RUN_MIGRATIONS
         value: "true"
+      # Database-backed sessions so the app is safe across multiple instances.
+      - key: SESSION_DRIVER
+        value: "CodeIgniter\\Session\\Handlers\\DatabaseHandler"
+      - key: SESSION_SAVE_PATH
+        value: ci_sessions
       # Public URL of the service, e.g. https://menuscanorder.onrender.com
       - key: APP_BASE_URL
         sync: false

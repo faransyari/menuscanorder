@@ -31,6 +31,10 @@ ENV_FILE="${APP_ROOT}/.env"
         echo "database.default.port = ${DB_PORT:-3306}"
         echo "database.default.DBDebug = ${DB_DEBUG:-false}"
     fi
+
+    # Database-backed sessions keep the app multi-instance safe (shared store).
+    echo "session.driver = '${SESSION_DRIVER:-CodeIgniter\\Session\\Handlers\\DatabaseHandler}'"
+    echo "session.savePath = '${SESSION_SAVE_PATH:-ci_sessions}'"
 } > "${ENV_FILE}"
 
 # --------------------------------------------------------------------

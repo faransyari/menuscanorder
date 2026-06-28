@@ -86,6 +86,8 @@ CodeIgniter `.env` file at startup.
 | `DB_PORT`         | no       | `3306`                                  | Defaults to `3306` |
 | `DB_DEBUG`        | no       | `false`                                 | Keep `false` in production |
 | `RUN_MIGRATIONS`  | no       | `true`                                  | Run migrations on container start |
+| `SESSION_DRIVER`  | no       | `CodeIgniter\Session\Handlers\DatabaseHandler` | DB sessions for multi-instance safety |
+| `SESSION_SAVE_PATH` | no     | `ci_sessions`                           | Session table name (DB driver) |
 | `R2_ENDPOINT`     | prod     | `https://<acct>.r2.cloudflarestorage.com` | Cloudflare R2 endpoint |
 | `R2_BUCKET`       | prod     | `menuscanorder`                         | R2 bucket name |
 | `R2_ACCESS_KEY_ID`| prod     | `••••`                                  | R2 API token key |
@@ -145,10 +147,10 @@ This repo ships a [`render.yaml`](./render.yaml) Blueprint and a production
 - [`docker/entrypoint.sh`](./docker/entrypoint.sh) builds `.env` from environment
   variables, runs `php spark migrate`, and listens on `$PORT`.
 
-> **Note on file storage:** sessions and uploads are written to `writable/` on the
-> container's local disk, which is ephemeral on Render's free tier (reset on
-> redeploy/restart). For persistent uploads, move them to object storage; for
-> shared sessions across instances, switch `Config\Session` to the database driver.
+> **Note on persistence:** uploads go to Cloudflare R2 and sessions to the database
+> (`ci_sessions` table), so neither depends on the container's ephemeral local disk.
+> The app is therefore safe to run across multiple instances. Anything still written
+> under `writable/` (cache, logs) is disposable and resets on redeploy.
 
 ---
 
