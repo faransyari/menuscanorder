@@ -169,7 +169,7 @@
 <body>
     <header class="navbar navbar-expand-md navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="./">MenuScanOrder</a>
+            <a class="navbar-brand" href="<?= site_url() ?>">MenuScanOrder</a>
             <ul class="navbar-nav me-auto"></ul>
             
         </div>
@@ -210,7 +210,7 @@
 
             </form>
 
-                <a href="./register" class="register-link">Don't have an account?</a>
+                <a href="<?= site_url('register') ?>" class="register-link">Don't have an account?</a>
 
             </div>
         </div>   

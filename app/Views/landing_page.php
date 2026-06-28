@@ -132,7 +132,7 @@
     <h2 id="typing-effect"></h2>
     <h1><b>MenuScanOrder.</b></h1>
     <button class="btn btn-start-ordering" aria-label="Start Ordering" onclick="handleOrdering()">Start Ordering</button>
-    <a href="./register" class="register-link">Don't have an account?</a>
+    <a href="<?= site_url('register') ?>" class="register-link">Don't have an account?</a>
 </body>
 
 <script>

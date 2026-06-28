@@ -139,10 +139,10 @@
 <body>
     <header class="navbar navbar-expand-md navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="./">MenuScanOrder</a>
+            <a class="navbar-brand" href="<?= site_url() ?>">MenuScanOrder</a>
             <ul class="navbar-nav me-auto"></ul>
             <div class="d-flex">
-                <button class="btn btn-sign-in" onclick="window.location.href='./login'" type="button">Login</button>
+                <button class="btn btn-sign-in" onclick="window.location.href='<?= site_url('login') ?>'" type="button">Login</button>
             </div>
         </div>
     </header>
