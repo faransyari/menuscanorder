@@ -31,6 +31,12 @@
 
     <main class="container-fluid py-4">
         <h2>Generate QR for Tables</h2>
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="alert alert-danger"><?= esc(session()->getFlashdata('error')) ?></div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert alert-success"><?= esc(session()->getFlashdata('success')) ?></div>
+        <?php endif; ?>
     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#generateQRModal" data-table-number="1">Generate QR</button>
         <?php if (empty($tables)): ?>
             <p>No tables found.</p>

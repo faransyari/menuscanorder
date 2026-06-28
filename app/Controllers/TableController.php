@@ -106,14 +106,20 @@ class TableController extends Controller
 
         // The QR encodes a link to the live menu for this restaurant/table.
         // It is rendered on demand (see qr()), so no file is stored here.
+        // 'completed' is omitted so the column's DB default applies (passing a
+        // PHP bool can be rejected under MySQL strict mode).
         $data = [
-            'table_number' => $tableNumber,
+            'table_number' => (int) $tableNumber,
             'restaurant_id' => $restaurantId,
             'qr_code' => $this->menuUrl($restaurantId, $tableNumber),
-            'completed' => false
         ];
 
-        $this->TableModel->insert($data);
+        if ($this->TableModel->insert($data) === false) {
+            $dbError = $this->TableModel->db->error();
+            log_message('error', 'Table insert failed: ' . json_encode($dbError) . ' | model: ' . json_encode($this->TableModel->errors()));
+            session()->setFlashdata('error', 'Failed to create table: ' . ($dbError['message'] ?? 'database error'));
+            return redirect()->back();
+        }
 
         session()->setFlashdata('success', 'QR code generated successfully for table ' . $tableNumber . '.');
         return redirect()->back();
