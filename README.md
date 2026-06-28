@@ -83,7 +83,9 @@ CodeIgniter `.env` file at startup.
 | `DB_DATABASE`     | yes      | `menuscanorder`                         | Database name |
 | `DB_USERNAME`     | yes      | `avnadmin`                              | DB user |
 | `DB_PASSWORD`     | yes      | `••••••`                                | DB password |
-| `DB_PORT`         | no       | `3306`                                  | Defaults to `3306` |
+| `DB_PORT`         | no       | `3306`                                  | Defaults to `3306` (Aiven uses a custom port) |
+| `DB_SSL`          | prod     | `true`                                  | Enable TLS — required by Aiven/managed MySQL |
+| `DB_SSL_CA_PATH`  | no       | `/etc/secrets/ca.pem`                   | Optional CA for strict cert verification |
 | `DB_DEBUG`        | no       | `false`                                 | Keep `false` in production |
 | `RUN_MIGRATIONS`  | no       | `true`                                  | Run migrations on container start |
 | `SESSION_DRIVER`  | no       | `CodeIgniter\Session\Handlers\DatabaseHandler` | DB sessions for multi-instance safety |

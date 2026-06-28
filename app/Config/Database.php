@@ -197,5 +197,25 @@ class Database extends Config
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
+
+        // Managed MySQL providers (Aiven, PlanetScale, etc.) require TLS.
+        // Set DB_SSL=true to enable an encrypted connection. Optionally point
+        // DB_SSL_CA_PATH at a CA bundle for full server-certificate verification;
+        // without one we still encrypt, using the system CA store.
+        if (in_array(strtolower((string) env('DB_SSL', 'false')), ['1', 'true', 'yes'], true)) {
+            $caPath = (string) env('DB_SSL_CA_PATH', '');
+
+            if ($caPath !== '' && is_file($caPath)) {
+                $this->default['encrypt'] = [
+                    'ssl_ca'     => $caPath,
+                    'ssl_verify' => true,
+                ];
+            } else {
+                $this->default['encrypt'] = [
+                    'ssl_capath' => '/etc/ssl/certs',
+                    'ssl_verify' => false,
+                ];
+            }
+        }
     }
 }

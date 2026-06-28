@@ -39,6 +39,9 @@ services:
         sync: false
       - key: DB_PORT
         value: "3306"
+      # Managed MySQL (Aiven, etc.) requires TLS.
+      - key: DB_SSL
+        value: "true"
       # Cloudflare R2 (S3-compatible) — persistent menu-image storage.
       - key: R2_ENDPOINT
         sync: false
