@@ -1,10 +1,47 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Deploys the CodeIgniter 4 app as a Docker web service.
+# Secrets (DB credentials, encryption key) are NOT stored here; set them in
+# the Render dashboard. `sync: false` keeps them out of version control.
 services:
   - type: web
     name: menuscanorder
-    env: php
+    runtime: docker
     plan: free
-    repo: https://github.com/faransyari/menuscanorder
-    buildCommand: ""
-    startCommand: ""
-    phpVersion: 8.1
-    rootDir: public
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: CI_ENVIRONMENT
+        value: production
+      - key: APP_FORCE_HTTPS
+        value: "true"
+      - key: RUN_MIGRATIONS
+        value: "true"
+      # Public URL of the service, e.g. https://menuscanorder.onrender.com
+      - key: APP_BASE_URL
+        sync: false
+      # Generate locally with: php spark key:generate --show
+      - key: ENCRYPTION_KEY
+        sync: false
+      # External MySQL connection (Render free tier has no managed MySQL).
+      - key: DB_HOSTNAME
+        sync: false
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      # Cloudflare R2 (S3-compatible) — persistent menu-image storage.
+      - key: R2_ENDPOINT
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_PUBLIC_URL
+        sync: false

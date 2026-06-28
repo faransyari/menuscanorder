@@ -60,6 +60,12 @@ writable/session/*
 writable/uploads/*
 !writable/uploads/index.html
 
+# Locally-stored uploads (production uses Cloudflare R2). Keep the dirs only.
+public/uploads/menu_items/*
+!public/uploads/menu_items/.gitkeep
+public/uploads/qr_codes/*
+!public/uploads/qr_codes/.gitkeep
+
 writable/debugbar/*
 !writable/debugbar/.gitkeep
 

@@ -11,6 +11,7 @@
     },
     "require": {
         "php": "^8.1",
+        "aws/aws-sdk-php": "^3.386",
         "codeigniter4/framework": "^4.0",
         "codeigniter4/shield": "^1.0",
         "endroid/qr-code": "^5.0",

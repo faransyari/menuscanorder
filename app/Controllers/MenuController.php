@@ -6,20 +6,23 @@ use App\Models\CategoryModel;
 use App\Models\OrderModel;
 use App\Models\OrderItemsModel;
 use App\Models\TableModel;
+use App\Libraries\MenuImageStorage;
 
 
 class MenuController extends BaseController
 {
     protected $menuItemModel;
+    protected MenuImageStorage $imageStorage;
 
     public function __construct()
     {
-        helper('url'); 
+        helper(['url', 'image']);
         $this->menuItemModel = new MenuItemModel();
         $this->categoryModel = new CategoryModel();
         $this->orderModel = new OrderModel();
         $this->orderItemsModel = new OrderItemsModel();
         $this->tableModel = new TableModel();
+        $this->imageStorage = new MenuImageStorage();
     }
 
     /**
@@ -147,10 +150,9 @@ class MenuController extends BaseController
         $data['restaurant_id'] = $restaurantId;
         
         $imageFile = $this->request->getFile('image');
-        if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
-            $newImageName = $imageFile->getRandomName();
-            $imageFile->move(FCPATH . 'uploads/menu_items', $newImageName);
-            $data['image'] = $newImageName;
+        $imageName = $this->handleImageUpload($imageFile);
+        if ($imageName !== null) {
+            $data['image'] = $imageName;
         }
 
         if ($this->menuItemModel->insert($data)) {
@@ -184,12 +186,14 @@ class MenuController extends BaseController
             'name', 'description', 'price', 'category', 'is_featured'
         ]);
 
-        if ($imageFile = $this->request->getFile('image')) {
-            if ($imageFile->isValid() && !$imageFile->hasMoved()) {
-                $newImageName = $imageFile->getRandomName();
-                $imageFile->move(FCPATH . 'uploads/menu_items', $newImageName);
-                $data['image'] = $newImageName;
+        $imageName = $this->handleImageUpload($this->request->getFile('image'));
+        if ($imageName !== null) {
+            // Remove the previous image so it doesn't linger in storage.
+            $existing = $this->menuItemModel->find($itemId);
+            if ($existing && !empty($existing['image'])) {
+                $this->imageStorage->delete($existing['image']);
             }
+            $data['image'] = $imageName;
         }
 
         if ($this->menuItemModel->update($itemId, $data)) {
@@ -248,9 +252,7 @@ class MenuController extends BaseController
     private function handleImageUpload($imageFile)
     {
         if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
-            $newImageName = $imageFile->getRandomName();
-            $imageFile->move(FCPATH . 'uploads/menu_items', $newImageName);
-            return $newImageName;
+            return $this->imageStorage->save($imageFile);
         }
         return null;
     }
@@ -284,9 +286,9 @@ class MenuController extends BaseController
             return redirect()->to('admin/menu_management')->with('error', 'Item not found.');
         }
     
-        // Delete the image file if it exists
-        if ($item['image'] && file_exists(FCPATH . 'uploads/menu_items/' . $item['image'])) {
-            unlink(FCPATH . 'uploads/menu_items/' . $item['image']);
+        // Delete the associated image from storage if it exists
+        if (!empty($item['image'])) {
+            $this->imageStorage->delete($item['image']);
         }
     
         // Attempt to delete the item using the model

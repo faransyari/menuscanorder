@@ -104,28 +104,12 @@ class TableController extends Controller
             return redirect()->back();
         }
 
-        $qrCode = Builder::create()
-            ->writer(new PngWriter())
-            ->data('https://infs3202-14206650.uqcloud.net/menuscanorder/menu?restaurant_id=' . $restaurantId . '&table=' . $tableNumber)
-            ->encoding(new Encoding('UTF-8'))
-            ->size(300)
-            ->margin(10)
-            ->backgroundColor(new Color(255, 255, 255))
-            ->foregroundColor(new Color(0, 0, 0))
-            ->build();
-
-        $outputPath = FCPATH . 'uploads/qr_codes/' . $restaurantId . '_table_' . $tableNumber . '.png';
-        $qrCode->saveToFile($outputPath);
-
-        if (!file_exists($outputPath)) {
-            session()->setFlashdata('error', 'Failed to save QR code.');
-            return redirect()->back();
-        }
-
+        // The QR encodes a link to the live menu for this restaurant/table.
+        // It is rendered on demand (see qr()), so no file is stored here.
         $data = [
             'table_number' => $tableNumber,
             'restaurant_id' => $restaurantId,
-            'qr_code' => $outputPath,
+            'qr_code' => $this->menuUrl($restaurantId, $tableNumber),
             'completed' => false
         ];
 
@@ -133,6 +117,53 @@ class TableController extends Controller
 
         session()->setFlashdata('success', 'QR code generated successfully for table ' . $tableNumber . '.');
         return redirect()->back();
+    }
+
+    /**
+     * Builds the public menu URL that a table's QR code points to.
+     */
+    private function menuUrl($restaurantId, $tableNumber): string
+    {
+        return site_url('menu') . '?restaurant_id=' . $restaurantId . '&table=' . $tableNumber;
+    }
+
+    /**
+     * Streams a PNG QR code for a table, generated on demand from the live menu URL.
+     *
+     * Generating on request (rather than saving a file) means QR images always
+     * point at the current deployment domain and never need persistent storage.
+     *
+     * @param int|null $table_id
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
+    public function qr($table_id = null)
+    {
+        if (!auth()->loggedIn()) {
+            return redirect()->to('/login');
+        }
+
+        $restaurantId = session()->get('restaurant_id');
+        $table = $table_id ? $this->TableModel->find($table_id) : null;
+
+        // Only allow owners to render QR codes for their own restaurant's tables.
+        if (!$table || (string) $table['restaurant_id'] !== (string) $restaurantId) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data($this->menuUrl($table['restaurant_id'], $table['table_number']))
+            ->encoding(new Encoding('UTF-8'))
+            ->size(300)
+            ->margin(10)
+            ->backgroundColor(new Color(255, 255, 255))
+            ->foregroundColor(new Color(0, 0, 0))
+            ->build();
+
+        return $this->response
+            ->setHeader('Content-Type', $qrCode->getMimeType())
+            ->setHeader('Cache-Control', 'public, max-age=86400')
+            ->setBody($qrCode->getString());
     }
 
     /**
@@ -177,16 +208,9 @@ class TableController extends Controller
             return redirect()->back();
         }
     
-        // Construct the file path
-        $filePath = FCPATH . 'uploads/qr_codes/' . $table['restaurant_id'] . '_table_' . $table['table_number'] . '.png';
-    
-        // Attempt to delete the QR code file
-        if (file_exists($filePath) && !unlink($filePath)) {
-            session()->setFlashdata('error', 'Failed to delete QR code file.');
-            // Optionally, decide if you want to stop the process if the file can't be deleted
-            // return redirect()->back();
-        }
-    
+        // QR codes are generated on demand (no stored file), so only the
+        // database entry needs to be removed.
+
         // Delete the database entry
         if (!$tableModel->delete($table_id)) {
             session()->setFlashdata('error', 'Failed to delete table record.');

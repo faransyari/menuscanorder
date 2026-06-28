@@ -59,7 +59,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body text-center">
-                                                <img src="<?= base_url('uploads/qr_codes/' . esc($table['restaurant_id']) . '_table_' . esc($table['table_number']) . '.png') ?>" alt="QR Code for Table <?= esc($table['table_number']) ?>" style="max-width: 100%; height: auto;">
+                                                <img src="<?= esc(site_url('admin/qr/' . $table['table_id']), 'attr') ?>" alt="QR Code for Table <?= esc($table['table_number']) ?>" style="max-width: 100%; height: auto;">
                                                 <p class="mt-3">Table Number: <?= esc($table['table_number']) ?></p>
                                             </div>
                                         </div>

@@ -260,7 +260,7 @@
                     <?php if ($item['is_featured'] == 1): // Check if the item is explicitly featured as '1' ?>
                         <div class="col-feature">
                             <div class="card-0">
-                                <img src="<?= base_url('uploads/menu_items/' . esc($item['image'])) ?>" class="card-img-top" alt="<?= esc($item['name']) ?>">
+                                <img src="<?= esc(menu_image_url($item['image']), 'attr') ?>" class="card-img-top" alt="<?= esc($item['name']) ?>">
                                 <div class="card-body">
                                     <h6 class="card-title mb-1"><?= esc($item['name']) ?></h6>
                                     <p class="card-text m-0">A$<?= esc($item['price']) ?></p>
@@ -295,7 +295,7 @@
                             <p><?= esc($item['description']) ?></p>
                         </div>
                         <div>
-                            <img class="food-icon" src="<?= base_url('uploads/menu_items/' . esc($item['image'])) ?>">
+                            <img class="food-icon" src="<?= esc(menu_image_url($item['image']), 'attr') ?>">
                             <div class="d-flex flex-column align-items-center">
                                 <button class="btn btn-outline-info rounded-pill mt-2 add-to-cart-btn" data-item-id="<?= $item['item_id'] ?>">Add to Cart</button>
                                 <div class="quantity-selector d-none" id="quantity-selector-<?= $item['item_id'] ?>">

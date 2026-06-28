@@ -19,6 +19,7 @@ $routes->get('/admin', 'MenuController::admin_index');
 
 $routes->get('/admin/generate_qr', 'TableController::view_generate_qr');
 $routes->post('/admin/generate_qr', 'TableController::generateQr');
+$routes->get('/admin/qr/(:num)', 'TableController::qr/$1');
 $routes->get('/admin/generate_qr/delete/(:num)', 'TableController::delete/$1');
 
 $routes->post('/admin/menu_management/add_category', 'MenuController::add_category');

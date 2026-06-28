@@ -177,11 +177,11 @@ function handleOrdering() {
     var userRole = <?= json_encode(session()->get('user_role')); ?>;
 
     if (userRole === 0) {
-        window.location.href = 'https://infs3202-14206650.uqcloud.net/menuscanorder/index.php/admin';
+        window.location.href = '<?= site_url('admin') ?>';
     } else if (userRole === 1) {  // Any logged-in user that is not an admin
-        window.location.href = 'https://infs3202-14206650.uqcloud.net/menuscanorder/index.php/loggedin';
+        window.location.href = '<?= site_url('loggedin') ?>';
     } else {  // Not logged in
-        window.location.href = 'https://infs3202-14206650.uqcloud.net/menuscanorder/index.php/login';
+        window.location.href = '<?= site_url('login') ?>';
     }
 }
 </script>

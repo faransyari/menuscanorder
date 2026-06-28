@@ -157,7 +157,7 @@
                 <tbody>
                     <?php foreach ($menuItems as $item): ?>
                         <tr>
-                            <td><img src="<?= base_url('uploads/menu_items/' . esc($item['image'])) ?>" alt="<?= esc($item['name']) ?>" style="width: 60px; height: 60px;"></td>
+                            <td><img src="<?= esc(menu_image_url($item['image']), 'attr') ?>" alt="<?= esc($item['name']) ?>" style="width: 60px; height: 60px;"></td>
                             <td ><?= esc($item['name']) ?></td>
                             <td class="hide-in-portrait">$<?= esc($item['price']) ?></td>
                             <td class="hide-in-portrait"><?= esc($item['description']) ?></td>

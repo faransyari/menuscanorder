@@ -1,0 +1,31 @@
+# Keep the build context small and never ship secrets or local artifacts.
+.git
+.github
+.gitignore
+.gitattributes
+.env
+.vscode
+.idea
+*.md
+LICENSE
+
+# Dependencies / build output are reinstalled inside the image
+vendor/
+node_modules/
+
+# Local writable runtime data
+writable/cache/*
+writable/logs/*
+writable/session/*
+writable/debugbar/*
+writable/uploads/*
+
+# Tests are not needed in the production image
+tests/
+phpunit.xml.dist
+phpunit
+.phpunit.cache
+results/
+
+# Render/docker meta
+render.yaml
