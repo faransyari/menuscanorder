@@ -16,9 +16,21 @@ PORT="${PORT:-8080}"
 #    the image; values are injected at runtime by the host).
 # --------------------------------------------------------------------
 ENV_FILE="${APP_ROOT}/.env"
+
+# Resolve the public base URL. Prefer an explicit APP_BASE_URL, otherwise fall
+# back to the URL Render injects automatically (RENDER_EXTERNAL_URL). Ensure a
+# trailing slash, which CodeIgniter requires.
+BASE_URL="${APP_BASE_URL:-${RENDER_EXTERNAL_URL:-}}"
+if [ -n "${BASE_URL}" ]; then
+    case "${BASE_URL}" in
+        */) ;;
+        *) BASE_URL="${BASE_URL}/" ;;
+    esac
+fi
+
 {
     echo "CI_ENVIRONMENT = ${CI_ENVIRONMENT:-production}"
-    [ -n "${APP_BASE_URL:-}" ]   && echo "app.baseURL = '${APP_BASE_URL}'"
+    [ -n "${BASE_URL}" ]         && echo "app.baseURL = '${BASE_URL}'"
     echo "app.forceGlobalSecureRequests = ${APP_FORCE_HTTPS:-true}"
     [ -n "${ENCRYPTION_KEY:-}" ] && echo "encryption.key = ${ENCRYPTION_KEY}"
 
