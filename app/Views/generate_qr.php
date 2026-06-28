@@ -83,7 +83,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="generateQRForm" action="generate_qr" method="post">
+                    <form id="generateQRForm" action="<?= site_url('admin/generate_qr') ?>" method="post">
                         <div class="mb-3">
                             <label for="tableNumberInput" class="form-label">Table Number</label>
                             <input type="number" class="form-control" id="tableNumberInput" name="tableNumber" required>

@@ -41,13 +41,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="/menuscanorder/admin/">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/menuscanorder/admin/orders">Orders</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/menuscanorder/admin/menu_management">Menu Management</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/menuscanorder/admin/generate_qr">Generate QR</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= site_url('admin') ?>">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= site_url('admin/orders') ?>">Orders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= site_url('admin/menu_management') ?>">Menu Management</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= site_url('admin/generate_qr') ?>">Generate QR</a></li>
                 </ul>
                 <div class="d-flex">
-                    <button class="btn btn-sign-in" onclick="window.location.href='./logout'" type="button">Logout</button>
+                    <button class="btn btn-sign-in" onclick="window.location.href='<?= site_url('admin/logout') ?>'" type="button">Logout</button>
                 </div>
             </div>
         </div>
